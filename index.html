@@ -3,48 +3,299 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculateur Cardio Pente</title>
-    <meta name="description" content="Calculateur d'équivalence Pas/Pente pour entraînement cardio.">
+    <title>Cardio Normalizer - 4km/h Ref</title>
     <style>
-        :root { --bg: #121212; --surface: #1e1e1e; --primary: #bb86fc; --text: #e0e0e0; }
-        body { background-color: var(--bg); color: var(--text); font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background-color: var(--surface); padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(187, 134, 252, 0.2); width: 90%; max-width: 400px; }
-        h2 { color: var(--primary); text-align: center; }
-        label { display: block; margin-top: 10px; font-size: 0.9rem; }
-        input { width: 100%; padding: 10px; margin-top: 5px; background: #2d2d2d; border: 1px solid #444; color: #fff; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; margin-top: 20px; background: var(--primary); color: #000; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button:hover { opacity: 0.9; }
-        .result { margin-top: 20px; padding: 15px; background: #252525; border-left: 4px solid var(--primary); display: none; }
-        .highlight { color: var(--primary); font-weight: bold; font-size: 1.2rem; }
+        /* --- THEME SOMBRE PRO --- */
+        :root { 
+            --bg: #0f0f0f; 
+            --surface: #1c1c1c; 
+            --surface-light: #2a2a2a;
+            --primary: #bb86fc; 
+            --accent: #03dac6; 
+            --text: #e0e0e0; 
+            --text-dim: #909090;
+            --border: #333;
+        }
+
+        body { 
+            background-color: var(--bg); 
+            color: var(--text); 
+            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh;
+        }
+        
+        .container { 
+            background-color: var(--surface); 
+            padding: 2rem; 
+            border-radius: 16px; 
+            width: 100%; 
+            max-width: 700px; 
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+        }
+
+        h1 { color: var(--text); font-size: 1.2rem; margin: 0 0 20px 0; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        .highlight { color: var(--primary); }
+
+        /* --- CONVERTISSEUR (SECTION CLEF) --- */
+        .converter-box {
+            background: var(--surface-light);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 30px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-wrapper label { display: block; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 5px; font-weight: bold; }
+        .input-wrapper input { 
+            width: 100%; 
+            background: var(--bg); 
+            border: 1px solid var(--border); 
+            color: #fff; 
+            padding: 12px; 
+            border-radius: 6px; 
+            font-size: 1.1rem; 
+            font-family: monospace;
+            box-sizing: border-box;
+        }
+        .input-wrapper input:focus { outline: none; border-color: var(--primary); }
+
+        .result-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .result-left { font-size: 0.9rem; color: var(--text-dim); }
+        .result-right { text-align: right; }
+        .big-number { font-size: 2rem; font-weight: bold; color: var(--accent); display: block; line-height: 1; }
+        .unit { font-size: 0.8rem; color: var(--accent); opacity: 0.8; }
+
+        /* --- IMPORT CSV --- */
+        .csv-section {
+            margin-top: 30px;
+            border-top: 1px dashed var(--border);
+            padding-top: 20px;
+        }
+        h3 { font-size: 1rem; color: var(--text); margin-bottom: 15px; }
+        
+        input[type="file"] {
+            background: var(--surface-light);
+            padding: 10px;
+            border-radius: 6px;
+            width: 100%;
+            box-sizing: border-box;
+            cursor: pointer;
+            color: var(--text-dim);
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.85rem; }
+        th { text-align: left; color: var(--text-dim); padding: 8px; border-bottom: 1px solid var(--border); }
+        td { padding: 8px; border-bottom: 1px solid #333; color: var(--text); }
+        .std-col { color: var(--accent); font-weight: bold; }
+
+        .total-row { margin-top: 15px; text-align: right; font-size: 1.1rem; }
     </style>
 </head>
 <body>
-<div class="container">
-    <h2>Cardio Pente Calc</h2>
-    <label>Vitesse (km/h)</label><input type="number" id="speed" value="4" step="0.1">
-    <label>Pente (%)</label><input type="number" id="slope" value="5" step="0.5">
-    <label>Durée (min)</label><input type="number" id="time" value="30">
-    <button onclick="calc()">Calculer</button>
-    <div id="res" class="result">
-        <p>Pas physiques : <span id="pSteps">0</span></p>
-        <hr style="border-color:#444"><p>🔥 Équivalent Effort : <br><span id="eSteps" class="highlight">0</span></p>
-    </div>
-</div>
-<script>
-    function calc() {
-        const s = parseFloat(document.getElementById('speed').value);
-        const p = parseFloat(document.getElementById('slope').value);
-        const t = parseFloat(document.getElementById('time').value);
-        if(isNaN(s)||isNaN(p)||isNaN(t)) return alert("Valeurs invalides");
-        
-        const distM = (s * (t/60)) * 1000;
-        const phys = Math.floor(distM / 0.75); // Foulée moyenne
-        const eff = Math.floor(phys * (1 + (p/10))); // Règle du +10% par 1% de pente
 
-        document.getElementById('pSteps').innerText = phys;
-        document.getElementById('eSteps').innerText = eff;
-        document.getElementById('res').style.display = 'block';
+<div class="container">
+    <h1><span class="highlight">Cardio</span> Normalizer</h1>
+    
+    <div class="converter-box">
+        <div style="margin-bottom:15px; font-size:0.9rem; color:#aaa;">
+            Convertir une séance <strong style="color:#fff">X</strong> vers le référentiel <strong style="color:var(--primary)">4km/h Plat</strong>.
+        </div>
+
+        <div class="input-grid">
+            <div class="input-wrapper">
+                <label>VITESSE (km/h)</label>
+                <input type="number" id="inSpeed" value="4" step="0.1" oninput="updateConverter()">
+            </div>
+            <div class="input-wrapper">
+                <label>PENTE (%)</label>
+                <input type="number" id="inSlope" value="5" step="0.5" oninput="updateConverter()">
+            </div>
+            <div class="input-wrapper">
+                <label>DURÉE (min)</label>
+                <input type="number" id="inTime" value="30" oninput="updateConverter()">
+            </div>
+        </div>
+
+        <div class="result-display">
+            <div class="result-left">
+                <div>Pas Physiques (Réels) : <strong id="outPhys" style="color:#fff">0</strong></div>
+                <div style="font-size:0.8rem; margin-top:4px;">Ratio d'intensité : <span id="outRatio">x1.0</span></div>
+            </div>
+            <div class="result-right">
+                <span class="big-number" id="outStd">0</span>
+                <span class="unit">PAS STANDARD (REF 4KM/H)</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="csv-section">
+        <h3>Appliquer ce scénario sur mon TRACKER.csv</h3>
+        <input type="file" id="csvInput" accept=".csv" onchange="processCSV()">
+        
+        <div id="csvResults" style="display:none;">
+            <div class="total-row">
+                Total Normalisé : <strong style="color:var(--accent)" id="csvTotal">0</strong> pas std
+            </div>
+            <div style="max-height:300px; overflow-y:auto; margin-top:10px; border:1px solid var(--border);">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Pas Réels</th>
+                            <th>Pas Standard (4km/h)</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- CONSTANTES ---
+    const REF_SPEED = 4.0; // Le référentiel absolu
+    const STRIDE_REF = 0.75; // Foulée moyenne à 4km/h
+    
+    // --- 1. MOTEUR DE NORMALISATION ---
+    function getIntensityRatio(speed, slope) {
+        // Logique : 
+        // 1. Facteur Pente : Ta règle (+10% par 1% de pente)
+        const slopeFactor = 1 + (slope / 10);
+        
+        // 2. Facteur Vitesse : Linéaire par rapport à la réf 4km/h
+        // Si je marche à 6km/h, je consomme 1.5x plus qu'à 4km/h (approx)
+        const speedFactor = speed / REF_SPEED;
+
+        return slopeFactor * speedFactor;
     }
+
+    function updateConverter() {
+        const speed = parseFloat(document.getElementById('inSpeed').value) || 0;
+        const slope = parseFloat(document.getElementById('inSlope').value) || 0;
+        const time = parseFloat(document.getElementById('inTime').value) || 0;
+
+        // 1. Calcul des pas physiques réels (Ce que la montre affiche)
+        // Distance = Vitesse * Temps
+        const distKm = speed * (time / 60);
+        const distM = distKm * 1000;
+        // Estimation foulée : on ajuste légèrement la foulée avec la vitesse (facultatif mais plus précis)
+        // Pour simplifier et rester sur ta demande de "référentiel", on garde 0.75 ou on adapte.
+        // Restons simple : Pas réels = Distance / 0.75
+        const physSteps = Math.floor(distM / STRIDE_REF);
+
+        // 2. Normalisation
+        const ratio = getIntensityRatio(speed, slope);
+        const stdSteps = Math.floor(physSteps * ratio);
+
+        // 3. Affichage
+        document.getElementById('outPhys').innerText = physSteps.toLocaleString();
+        document.getElementById('outRatio').innerText = "x" + ratio.toFixed(2);
+        document.getElementById('outStd').innerText = stdSteps.toLocaleString();
+        
+        // Mise à jour du tableau CSV si un fichier est déjà chargé
+        if(rawData.length > 0) recalculateCSV();
+    }
+
+    // --- 2. GESTION CSV (TRACKER) ---
+    let rawData = [];
+
+    function processCSV() {
+        const file = document.getElementById('csvInput').files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => parseCSV(e.target.result);
+        reader.readAsText(file);
+    }
+
+    function parseCSV(text) {
+        rawData = [];
+        const lines = text.split('\n');
+        let colDate = -1, colPas = -1;
+        let start = false;
+
+        // Parsing "Tristan TRACKER" spécifique
+        for(let i=0; i<lines.length; i++) {
+            const line = lines[i].trim();
+            if(!start) {
+                if(line.toUpperCase().includes("DATE") && line.toUpperCase().includes("PAS")) {
+                    const h = line.split(/[,;]/);
+                    colDate = h.findIndex(c => c.toUpperCase().includes("DATE"));
+                    colPas = h.findIndex(c => c.trim().toUpperCase() === "PAS");
+                    if(colDate>-1 && colPas>-1) start = true;
+                }
+                continue;
+            }
+            
+            const cols = line.split(/[,;]/);
+            if(cols.length <= colPas) continue;
+
+            let sStr = cols[colPas].replace(/[\s"'\xa0]/g, '').replace(',', '.');
+            let date = cols[colDate];
+
+            if(!sStr || sStr === "FALSE" || sStr.includes("#")) continue;
+            
+            let steps = parseFloat(sStr);
+            if(steps > 0) rawData.push({d: date, s: steps});
+        }
+        
+        document.getElementById('csvResults').style.display = 'block';
+        recalculateCSV();
+    }
+
+    function recalculateCSV() {
+        // On applique les paramètres actuels (Haut de page) à tout le fichier
+        // HYPOTHÈSE : Le fichier contient des pas "Physiques". On veut voir ce qu'ils valent en "Standard".
+        
+        const speed = parseFloat(document.getElementById('inSpeed').value) || 4;
+        const slope = parseFloat(document.getElementById('inSlope').value) || 0;
+        const ratio = getIntensityRatio(speed, slope); // Le ratio actuel défini en haut
+
+        let tbody = "";
+        let totalStd = 0;
+
+        rawData.forEach(row => {
+            // Les pas du CSV sont considérés comme "réels/physiques"
+            const std = Math.floor(row.s * ratio);
+            totalStd += std;
+
+            tbody += `<tr>
+                <td>${row.d}</td>
+                <td>${row.s.toLocaleString()}</td>
+                <td class="std-col">${std.toLocaleString()}</td>
+            </tr>`;
+        });
+
+        document.querySelector('#dataTable tbody').innerHTML = tbody;
+        document.getElementById('csvTotal').innerText = totalStd.toLocaleString();
+    }
+
+    // Init au chargement
+    updateConverter();
 </script>
+
 </body>
 </html>
