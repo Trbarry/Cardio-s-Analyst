@@ -3,345 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tristan's Cardio Analyst</title>
+    <title>Calculateur Cardio Pente</title>
+    <meta name="description" content="Calculateur d'équivalence Pas/Pente pour entraînement cardio.">
     <style>
-        /* --- THEME --- */
-        :root { 
-            --bg: #121212; 
-            --surface: #1e1e1e; 
-            --surface-2: #2c2c2c;
-            --primary: #bb86fc; 
-            --secondary: #03dac6; 
-            --text: #e0e0e0; 
-            --text-dim: #aaaaaa;
-            --border: #333;
-        }
-
-        body { 
-            background-color: var(--bg); 
-            color: var(--text); 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            margin: 0; 
-            padding: 20px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            min-height: 100vh;
-        }
-        
-        .container { 
-            background-color: var(--surface); 
-            padding: 2rem; 
-            border-radius: 12px; 
-            width: 100%; 
-            max-width: 800px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6); 
-        }
-
-        h1 { color: var(--primary); margin-top: 0; font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-        h3 { color: var(--secondary); font-size: 1rem; margin-top: 25px; text-transform: uppercase; letter-spacing: 1px; }
-        
-        /* --- CONTROLS --- */
-        .controls { 
-            background: var(--surface-2); 
-            padding: 20px; 
-            border-radius: 8px; 
-            border: 1px solid var(--border);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .control-group { flex: 1; min-width: 200px; }
-        
-        label { display: block; font-size: 0.85rem; color: var(--text-dim); margin-bottom: 8px; font-weight: bold; }
-        
-        input[type="file"] { 
-            width: 100%; 
-            color: var(--text-dim); 
-            font-size: 0.9rem; 
-            cursor: pointer;
-        }
-        input[type="number"] { 
-            width: 100%; 
-            padding: 10px; 
-            background: var(--bg); 
-            border: 1px solid #555; 
-            color: white; 
-            border-radius: 5px; 
-            font-size: 1.1rem; 
-            box-sizing: border-box;
-        }
-        input[type="number"]:focus { border-color: var(--primary); outline: none; }
-
-        /* --- DASHBOARD STATS --- */
-        .stats-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
-            gap: 15px; 
-            margin-bottom: 30px; 
-        }
-        .stat-card { 
-            background: var(--surface-2); 
-            padding: 20px; 
-            border-radius: 8px; 
-            text-align: center; 
-            border-top: 3px solid #555;
-            transition: transform 0.2s;
-        }
-        .stat-card:hover { transform: translateY(-2px); }
-        .stat-val { display: block; font-size: 2rem; font-weight: bold; color: #fff; margin-bottom: 5px; }
-        .stat-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
-
-        /* --- FUN FACTS LIST --- */
-        .fun-list { display: grid; grid-template-columns: 1fr; gap: 10px; }
-        .fun-item { 
-            display: flex; 
-            align-items: center; 
-            background: var(--surface-2); 
-            padding: 15px; 
-            border-radius: 6px; 
-            border-left: 4px solid var(--bg);
-        }
-        .fun-icon { font-size: 1.8rem; margin-right: 15px; min-width: 40px; text-align: center; }
-        .fun-text { flex: 1; font-size: 0.9rem; color: var(--text-dim); }
-        .fun-number { font-weight: bold; color: var(--primary); font-size: 1.1rem; white-space: nowrap; }
-
-        /* --- TABLE --- */
-        .table-container { 
-            max-height: 400px; 
-            overflow-y: auto; 
-            border: 1px solid var(--border); 
-            border-radius: 6px; 
-            margin-top: 15px;
-        }
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        th { 
-            position: sticky; 
-            top: 0; 
-            background: var(--surface-2); 
-            color: var(--primary); 
-            padding: 12px; 
-            text-align: left; 
-            font-weight: 600;
-            z-index: 2; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
-        tr:hover { background-color: #2a2a2a; }
-        .col-effort { color: var(--secondary); font-weight: bold; }
-        
-        /* Scrollbar custom */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
-
-        .hidden { display: none; }
+        :root { --bg: #121212; --surface: #1e1e1e; --primary: #bb86fc; --text: #e0e0e0; }
+        body { background-color: var(--bg); color: var(--text); font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background-color: var(--surface); padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(187, 134, 252, 0.2); width: 90%; max-width: 400px; }
+        h2 { color: var(--primary); text-align: center; }
+        label { display: block; margin-top: 10px; font-size: 0.9rem; }
+        input { width: 100%; padding: 10px; margin-top: 5px; background: #2d2d2d; border: 1px solid #444; color: #fff; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; margin-top: 20px; background: var(--primary); color: #000; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { opacity: 0.9; }
+        .result { margin-top: 20px; padding: 15px; background: #252525; border-left: 4px solid var(--primary); display: none; }
+        .highlight { color: var(--primary); font-weight: bold; font-size: 1.2rem; }
     </style>
 </head>
 <body>
-
 <div class="container">
-    <h1>🏃‍♂️ Cardio Analyst V3</h1>
-    
-    <div class="controls">
-        <div class="control-group">
-            <label>1. Fichier de suivi (TRACKER.csv)</label>
-            <input type="file" id="csvInput" accept=".csv" onchange="processCSV()">
-        </div>
-        <div class="control-group">
-            <label>2. Simulation Pente Globale (%)</label>
-            <input type="number" id="globalSlope" value="5" step="0.5" oninput="recalcAll()">
-        </div>
-    </div>
-
-    <div id="dashboard" class="hidden">
-        
-        <div class="stats-grid">
-            <div class="stat-card" style="border-color: #fff;">
-                <span class="stat-val" id="totalRaw">0</span>
-                <span class="stat-label">Pas Physiques (Réels)</span>
-            </div>
-            <div class="stat-card" style="border-color: var(--primary);">
-                <span class="stat-val" id="totalEffort">0</span>
-                <span class="stat-label">Pas "Effort" (Simulé)</span>
-            </div>
-            <div class="stat-card" style="border-color: var(--secondary);">
-                <span class="stat-val" id="totalDist">0</span>
-                <span class="stat-label">Km Total</span>
-            </div>
-        </div>
-
-        <h3>Visualisation de l'effort</h3>
-        <div class="fun-list">
-            <div class="fun-item" style="border-color: var(--secondary);">
-                <span class="fun-icon">🗼</span>
-                <div class="fun-text">Hauteur Tour Eiffel grimpée (Dénivelé simulé)</div>
-                <span class="fun-number" id="valEiffel">0</span>
-            </div>
-            <div class="fun-item" style="border-color: #ff9800;">
-                <span class="fun-icon">🏔️</span>
-                <div class="fun-text">Ascensions du Mont Blanc (Dénivelé simulé)</div>
-                <span class="fun-number" id="valBlanc">0</span>
-            </div>
-            <div class="fun-item" style="border-color: #2196f3;">
-                <span class="fun-icon">🏟️</span>
-                <div class="fun-text">Tours de Stade Olympique (Distance)</div>
-                <span class="fun-number" id="valStade">0</span>
-            </div>
-            <div class="fun-item" style="border-color: #e91e63;">
-                <span class="fun-icon">🚴</span>
-                <div class="fun-text">Distance d'un Tour de France (3500km)</div>
-                <span class="fun-number" id="valTDF">0 %</span>
-            </div>
-        </div>
-
-        <h3>Détail par Session</h3>
-        <div class="table-container">
-            <table id="dataTable">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Pas (Montre)</th>
-                        <th>Pente</th>
-                        <th>Pas (Effort)</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
+    <h2>Cardio Pente Calc</h2>
+    <label>Vitesse (km/h)</label><input type="number" id="speed" value="4" step="0.1">
+    <label>Pente (%)</label><input type="number" id="slope" value="5" step="0.5">
+    <label>Durée (min)</label><input type="number" id="time" value="30">
+    <button onclick="calc()">Calculer</button>
+    <div id="res" class="result">
+        <p>Pas physiques : <span id="pSteps">0</span></p>
+        <hr style="border-color:#444"><p>🔥 Équivalent Effort : <br><span id="eSteps" class="highlight">0</span></p>
     </div>
 </div>
-
 <script>
-    /* --- CONFIGURATION --- */
-    const STRIDE = 0.75;        // 75cm par pas (Moyenne 4km/h homme)
-    const STADE_M = 400;        // Tour de piste
-    const EIFFEL_M = 324;       // Hauteur
-    const MONT_BLANC_M = 4809;  // Altitude
-    const TDF_KM = 3500;        // Tour de France moyen
-
-    let rawData = []; // Stockage mémoire des données brutes
-
-    /* --- 1. PARSING CSV --- */
-    function processCSV() {
-        const fileInput = document.getElementById('csvInput');
-        const file = fileInput.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const text = e.target.result;
-            parseTrackerData(text);
-        };
-        reader.readAsText(file, "UTF-8"); // Force UTF-8
-    }
-
-    function parseTrackerData(csvText) {
-        rawData = [];
-        const lines = csvText.split('\n');
+    function calc() {
+        const s = parseFloat(document.getElementById('speed').value);
+        const p = parseFloat(document.getElementById('slope').value);
+        const t = parseFloat(document.getElementById('time').value);
+        if(isNaN(s)||isNaN(p)||isNaN(t)) return alert("Valeurs invalides");
         
-        let colDate = -1;
-        let colPas = -1;
-        let dataFound = false;
+        const distM = (s * (t/60)) * 1000;
+        const phys = Math.floor(distM / 0.75); // Foulée moyenne
+        const eff = Math.floor(phys * (1 + (p/10))); // Règle du +10% par 1% de pente
 
-        // 1. Scanner le fichier pour trouver l'en-tête
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i].trim();
-            
-            if (!dataFound) {
-                // On cherche la ligne contenant "DATE" et "PAS"
-                if (line.toUpperCase().includes("DATE") && line.toUpperCase().includes("PAS")) {
-                    // Découpage (virgule ou point-virgule)
-                    const headers = line.split(/[,;]/);
-                    
-                    colDate = headers.findIndex(h => h.toUpperCase().includes("DATE"));
-                    // "PAS" exact pour éviter confusion avec d'autres colonnes
-                    colPas = headers.findIndex(h => h.trim().toUpperCase() === "PAS");
-                    
-                    if (colDate > -1 && colPas > -1) {
-                        dataFound = true;
-                    }
-                }
-                continue;
-            }
-
-            // 2. Extraire les données
-            const cols = line.split(/[,;]/);
-            if (cols.length <= colPas) continue;
-
-            const dateVal = cols[colDate].trim();
-            // Nettoyage barbare : virer les espaces, guillemets, remplacer virgule par point
-            let stepsStr = cols[colPas].replace(/[\s"'\xa0]/g, '').replace(',', '.');
-
-            // Ignorer les lignes invalides (#DIV/0!, FALSE, Vides)
-            if (!dateVal || dateVal === "FALSE" || stepsStr === "" || stepsStr.includes("#") || stepsStr.toUpperCase() === "FALSE") {
-                continue;
-            }
-
-            const steps = parseFloat(stepsStr);
-            if (!isNaN(steps) && steps > 0) {
-                rawData.push({ date: dateVal, steps: steps });
-            }
-        }
-
-        if (rawData.length > 0) {
-            document.getElementById('dashboard').classList.remove('hidden');
-            recalcAll();
-        } else {
-            alert("Erreur : Impossible de trouver des colonnes 'DATE' et 'PAS' valides dans ce fichier.");
-        }
-    }
-
-    /* --- 2. CALCULS & AFFICHAGE --- */
-    function recalcAll() {
-        const slopePercent = parseFloat(document.getElementById('globalSlope').value) || 0;
-        
-        // Facteurs
-        const multiplier = 1 + (slopePercent / 10); // Ta règle : +10% effort par 1% pente
-        const slopeFactor = slopePercent / 100;     // Pour le calcul dénivelé
-
-        let totalRaw = 0;
-        let totalEffort = 0;
-        let tbody = '';
-
-        rawData.forEach(row => {
-            const effort = Math.floor(row.steps * multiplier);
-            totalRaw += row.steps;
-            totalEffort += effort;
-
-            tbody += `
-                <tr>
-                    <td>${row.date}</td>
-                    <td>${row.steps.toLocaleString('fr-FR')}</td>
-                    <td style="color:#888">${slopePercent}%</td>
-                    <td class="col-effort">${effort.toLocaleString('fr-FR')}</td>
-                </tr>
-            `;
-        });
-
-        // DOM Updates
-        document.querySelector('#dataTable tbody').innerHTML = tbody;
-        
-        document.getElementById('totalRaw').innerText = totalRaw.toLocaleString('fr-FR');
-        document.getElementById('totalEffort').innerText = totalEffort.toLocaleString('fr-FR');
-
-        // Distances
-        const distKm = (totalRaw * STRIDE) / 1000;
-        const distM = distKm * 1000;
-        document.getElementById('totalDist').innerText = distKm.toFixed(1);
-
-        // Fun Facts Calculs
-        // Dénivelé total théorique = Distance Totale * (Pente / 100)
-        const elevationTotal = distM * slopeFactor;
-
-        document.getElementById('valEiffel').innerText = (elevationTotal / EIFFEL_M).toFixed(1) + " x";
-        document.getElementById('valBlanc').innerText = (elevationTotal / MONT_BLANC_M).toFixed(2) + " x";
-        document.getElementById('valStade').innerText = (distM / STADE_M).toFixed(0);
-        document.getElementById('valTDF').innerText = ((distKm / TDF_KM) * 100).toFixed(2) + " %";
+        document.getElementById('pSteps').innerText = phys;
+        document.getElementById('eSteps').innerText = eff;
+        document.getElementById('res').style.display = 'block';
     }
 </script>
-
 </body>
 </html>
